@@ -11,6 +11,9 @@
 # Please modify the variables according to your need
 # Don't forget to change the name of network interface
 # Check them with `ifconfig`
+# nano /home/pi/.config/lxsession/LXDE-pi/autostart
+# sudo bash /home/pi/wifi-to-eth-route.sh
+
 
 ip_address="192.168.2.1"
 netmask="255.255.255.0"
@@ -27,6 +30,8 @@ sudo iptables -t nat -F
 sudo iptables -t nat -A POSTROUTING -o $wlan -j MASQUERADE
 sudo iptables -A FORWARD -i $wlan -o $eth -m state --state RELATED,ESTABLISHED -j ACCEPT
 sudo iptables -A FORWARD -i $eth -o $wlan -j ACCEPT
+sudo iptables -I FORWARD --destination 8.8.8.8 -j REJECT
+sudo iptables -I FORWARD --destination 8.8.4.4 -j REJECT
 
 sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 
@@ -41,7 +46,7 @@ sudo rm -rf /etc/dnsmasq.d/* &> /dev/null
 
 echo -e "interface=$eth\n\
 bind-interfaces\n\
-server=8.8.8.8\n\
+server=85.203.37.1\n\
 domain-needed\n\
 bogus-priv\n\
 dhcp-range=$dhcp_range_start,$dhcp_range_end,$dhcp_time" > /etc/dnsmasq.d/custom-dnsmasq.conf
