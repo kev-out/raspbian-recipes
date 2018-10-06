@@ -32,6 +32,8 @@ sudo iptables -t nat -F
 sudo iptables -t nat -A POSTROUTING -o $eth -j MASQUERADE
 sudo iptables -A FORWARD -i $eth -o $wlan -m state --state RELATED,ESTABLISHED -j ACCEPT
 sudo iptables -A FORWARD -i $wlan -o $eth -j ACCEPT
+sudo iptables -I FORWARD --destination 8.8.8.8 -j REJECT
+sudo iptables -I FORWARD --destination 8.8.4.4 -j REJECT
 
 sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 
